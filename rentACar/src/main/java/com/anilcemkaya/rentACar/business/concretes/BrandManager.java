@@ -10,6 +10,7 @@ import com.anilcemkaya.rentACar.business.abstracts.BrandService;
 import com.anilcemkaya.rentACar.business.core.utilities.mappers.ModelMapperService;
 import com.anilcemkaya.rentACar.business.requests.CreateBrandRequest;
 import com.anilcemkaya.rentACar.business.responses.GetAllBrandsResponse;
+import com.anilcemkaya.rentACar.business.responses.GetByIdBrandResponse;
 import com.anilcemkaya.rentACar.dataAccess.abstracts.BrandRepository;
 import com.anilcemkaya.rentACar.entites.concretes.Brand;
 @Service
@@ -31,5 +32,11 @@ public class BrandManager implements BrandService{
 	public void add(CreateBrandRequest createBrandRequest) {
 		Brand brand=this.modelMapperService.forRequest().map(createBrandRequest, Brand.class);
 		this.brandRepository.save(brand);
+	}
+
+	@Override
+	public GetByIdBrandResponse getById(int id) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }
