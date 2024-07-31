@@ -3,25 +3,24 @@ package com.anilcemkaya.rentACar.business.concretes;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.anilcemkaya.rentACar.business.abstracts.BrandService;
 import com.anilcemkaya.rentACar.business.core.utilities.mappers.ModelMapperService;
 import com.anilcemkaya.rentACar.business.requests.CreateBrandRequest;
+import com.anilcemkaya.rentACar.business.requests.UpdateBrandRequest;
 import com.anilcemkaya.rentACar.business.responses.GetAllBrandsResponse;
 import com.anilcemkaya.rentACar.business.responses.GetByIdBrandResponse;
 import com.anilcemkaya.rentACar.dataAccess.abstracts.BrandRepository;
 import com.anilcemkaya.rentACar.entites.concretes.Brand;
+
+import lombok.AllArgsConstructor;
 @Service
+@AllArgsConstructor
 public class BrandManager implements BrandService{
 	private BrandRepository brandRepository;
 	private ModelMapperService modelMapperService;
-	@Autowired
-	public BrandManager(BrandRepository brandRepository) {
-		this.brandRepository = brandRepository;
-	}
-
+	
 	@Override
 	public List<GetAllBrandsResponse> getAll() {
 		List<Brand>brands=brandRepository.findAll();
@@ -36,7 +35,20 @@ public class BrandManager implements BrandService{
 
 	@Override
 	public GetByIdBrandResponse getById(int id) {
-		// TODO Auto-generated method stub
-		return null;
+		Brand brand=this.brandRepository.findById(id).orElseThrow();
+		GetByIdBrandResponse response=this.modelMapperService.forResponse().map(brand, GetByIdBrandResponse.class);
+				return response;
+	}
+
+	@Override
+	public void update(UpdateBrandRequest updateBrandRequest) {
+		Brand brand=this.modelMapperService.forRequest().map(updateBrandRequest, Brand.class);
+		this.brandRepository.save(brand);	
+	}
+
+	@Override
+	public void delete(int id) {
+		this.brandRepository.deleteById(id);
+		
 	}
 }
