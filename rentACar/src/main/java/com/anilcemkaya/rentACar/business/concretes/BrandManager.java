@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestBody;
 
 import com.anilcemkaya.rentACar.business.abstracts.BrandService;
 import com.anilcemkaya.rentACar.business.core.utilities.mappers.ModelMapperService;
@@ -11,6 +12,7 @@ import com.anilcemkaya.rentACar.business.requests.CreateBrandRequest;
 import com.anilcemkaya.rentACar.business.requests.UpdateBrandRequest;
 import com.anilcemkaya.rentACar.business.responses.GetAllBrandsResponse;
 import com.anilcemkaya.rentACar.business.responses.GetByIdBrandResponse;
+import com.anilcemkaya.rentACar.business.rules.BrandBusinessRules;
 import com.anilcemkaya.rentACar.dataAccess.abstracts.BrandRepository;
 import com.anilcemkaya.rentACar.entites.concretes.Brand;
 
@@ -20,6 +22,7 @@ import lombok.AllArgsConstructor;
 public class BrandManager implements BrandService{
 	private BrandRepository brandRepository;
 	private ModelMapperService modelMapperService;
+	private BrandBusinessRules brandBusinessRules;
 	
 	@Override
 	public List<GetAllBrandsResponse> getAll() {
@@ -28,7 +31,8 @@ public class BrandManager implements BrandService{
 		return brandsResponse;
 	}
 	@Override
-	public void add(CreateBrandRequest createBrandRequest) {
+	public void add(@RequestBody() CreateBrandRequest createBrandRequest) {
+		this.brandBusinessRules.checkIfBrandNameExists(createBrandRequest.getName());
 		Brand brand=this.modelMapperService.forRequest().map(createBrandRequest, Brand.class);
 		this.brandRepository.save(brand);
 	}
@@ -41,7 +45,7 @@ public class BrandManager implements BrandService{
 	}
 
 	@Override
-	public void update(UpdateBrandRequest updateBrandRequest) {
+	public void update(@RequestBody() UpdateBrandRequest updateBrandRequest) {
 		Brand brand=this.modelMapperService.forRequest().map(updateBrandRequest, Brand.class);
 		this.brandRepository.save(brand);	
 	}

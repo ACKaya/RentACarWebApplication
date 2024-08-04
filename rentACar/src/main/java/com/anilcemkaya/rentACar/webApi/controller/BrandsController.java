@@ -19,10 +19,13 @@ import com.anilcemkaya.rentACar.business.requests.CreateBrandRequest;
 import com.anilcemkaya.rentACar.business.requests.UpdateBrandRequest;
 import com.anilcemkaya.rentACar.business.responses.GetAllBrandsResponse;
 import com.anilcemkaya.rentACar.business.responses.GetByIdBrandResponse;
+
+import jakarta.validation.Valid;
 @RestController
 @RequestMapping("/api/brands")
 public class BrandsController {
 	private BrandService brandService;
+	
 	@Autowired
 	public BrandsController(BrandService brandService) {
 		this.brandService = brandService;
@@ -33,8 +36,9 @@ public class BrandsController {
 	}
 	@PostMapping("/add")
 	@ResponseStatus(code=HttpStatus.CREATED)
-	public void add(@RequestBody() CreateBrandRequest createBrandRequest) {
-	this.brandService.add(createBrandRequest);	
+	public void add(@RequestBody()@Valid() CreateBrandRequest createBrandRequest) {
+		
+		this.brandService.add(createBrandRequest);	
 	}
 	@GetMapping("/{id}")
 	public  GetByIdBrandResponse getById(@PathVariable() int id) {
